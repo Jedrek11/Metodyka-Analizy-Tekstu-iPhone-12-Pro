@@ -32,10 +32,21 @@ const scrapeCeneoFiles = async () => {
         return titleEl ? titleEl.innerText.trim() : 'Unknown_Product';
     });
 
-    const productNameSafe = productNameRaw
-        .replace(/[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s-]/g, "")
-        .replace(/\s+/g, "_")
-        .substring(0, 50);
+    let cleanText = productNameRaw.replace(/[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s-]/g, "").trim();
+
+    let words = cleanText.split(/\s+/);
+    
+    let productNameSafe = "";
+    
+    if (words.length > 1) {
+        let brand = words[0];                 
+        let model = words.slice(1).join('-'); 
+        productNameSafe = `${brand}_${model}`;
+    } else {
+        productNameSafe = cleanText;
+    }
+
+    productNameSafe = productNameSafe.substring(0, 50);
 
     console.log(`Produkt: ${productNameSafe}`);
 
@@ -66,6 +77,7 @@ const scrapeCeneoFiles = async () => {
                     const rawRating = ratingEl.innerText.trim(); 
                     let stars = 0;
                     try {
+
                         const numberPart = rawRating.split('/')[0].replace(',', '.');
                         stars = parseFloat(numberPart);
                     } catch (e) {}
