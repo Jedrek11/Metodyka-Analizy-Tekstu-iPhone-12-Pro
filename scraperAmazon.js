@@ -30,7 +30,7 @@ const scrapeAndSaveFiles = async () => {
 
     const startUrl = 'https://www.amazon.com/product-reviews/B08PMYLKVF/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews'; // iPhone 12 Pro Pacyfic Blue 128GB
     
-    const targetReviewCount = 100; 
+   const targetReviewCount = 100; 
     const outputFolder = path.join('reviews', 'en'); 
 
     if (!fs.existsSync(outputFolder)){
@@ -73,10 +73,22 @@ const scrapeAndSaveFiles = async () => {
                 let productRaw = "Unknown_Product";
                 const productLink = document.querySelector('a[data-hook="product-link"]');
                 if (productLink) {
-                    productRaw = productLink.innerText.trim()
-                        .replace(/[^a-zA-Z0-9 ]/g, "") 
-                        .replace(/\s+/g, "_")          
-                        .substring(0, 30);             
+
+                    let cleanText = productLink.innerText.trim().replace(/[^a-zA-Z0-9 ]/g, "");
+
+                    let words = cleanText.split(/\s+/);
+                    
+                    if (words.length > 1) {
+                        let brand = words[0]; 
+                        let model = words.slice(1).join('-'); 
+                        
+                        productRaw = `${brand}_${model}`;
+                    } else {
+
+                        productRaw = words[0];
+                    }
+
+                    productRaw = productRaw.substring(0, 50);
                 }
 
                 const cards = document.querySelectorAll('[data-hook="review"]');
@@ -145,3 +157,4 @@ const scrapeAndSaveFiles = async () => {
 };
 
 scrapeAndSaveFiles();
+
