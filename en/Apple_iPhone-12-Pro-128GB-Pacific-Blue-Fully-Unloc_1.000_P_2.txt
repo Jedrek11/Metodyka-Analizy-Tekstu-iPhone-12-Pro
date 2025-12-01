@@ -1,0 +1,3 @@
+So far, phone works as expected. I did notice the top camera lens doesn’t look like the other two. But I tested taking a picture and seems fine.
+
+Update: found that the ear speaker was not working. Returning it.
